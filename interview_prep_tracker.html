@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>面试备战 · 12周计划</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f4ef;
+    --bg3: #eeede8;
+    --text: #1a1a18;
+    --text2: #6b6a64;
+    --text3: #9c9b95;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --green: #1a7a4a;
+    --green-bg: #e6f4ed;
+    --red: #b03030;
+    --red-bg: #fceaea;
+    --amber: #7a5010;
+    --amber-bg: #fdf0d8;
+    --blue: #1a4f8a;
+    --blue-bg: #e6f0fb;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252523;
+      --bg3: #2e2e2b;
+      --text: #e8e6de;
+      --text2: #9c9a92;
+      --text3: #6b6a64;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.15);
+      --green: #4db87a;
+      --green-bg: #0f3020;
+      --red: #e06060;
+      --red-bg: #3a1010;
+      --amber: #d4920a;
+      --amber-bg: #3a2800;
+      --blue: #5a9ee0;
+      --blue-bg: #0e2040;
+    }
+  }
+
+  body {
+    font-family: 'SF Pro Text', -apple-system, 'Helvetica Neue', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .container { max-width: 680px; margin: 0 auto; }
+
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .top-title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .btn-group { display: flex; gap: 6px; align-items: center; }
+  .reset-btn {
+    font-size: 12px;
+    color: var(--text2);
+    background: none;
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .reset-btn:hover { background: var(--bg2); }
+  .export-btn {
+    font-size: 12px;
+    color: var(--blue);
+    background: var(--blue-bg);
+    border: 0.5px solid var(--blue);
+    border-radius: var(--radius-sm);
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    font-weight: 500;
+  }
+  .export-btn:hover { opacity: 0.8; }
+  .import-btn {
+    font-size: 12px;
+    color: var(--green);
+    background: var(--green-bg);
+    border: 0.5px solid var(--green);
+    border-radius: var(--radius-sm);
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    font-weight: 500;
+  }
+  .import-btn:hover { opacity: 0.8; }
+  .modal-overlay {
+    display: none;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    min-height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 100;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 20px;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 1rem;
+  }
+  .modal-title { font-size: 15px; font-weight: 500; margin-bottom: 10px; }
+  .modal-desc { font-size: 12px; color: var(--text2); margin-bottom: 12px; line-height: 1.6; }
+  .modal textarea {
+    width: 100%;
+    height: 120px;
+    font-size: 11px;
+    font-family: monospace;
+    background: var(--bg2);
+    color: var(--text);
+    border: 0.5px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    resize: none;
+    outline: none;
+  }
+  .modal-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+  .modal-actions button { font-size: 13px; padding: 6px 16px; border-radius: var(--radius-sm); cursor: pointer; border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text); }
+  .modal-actions .primary { background: var(--green-bg); color: var(--green); border-color: var(--green); font-weight: 500; }
+
+  .summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat {
+    background: var(--bg2);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-num { font-size: 22px; font-weight: 600; color: var(--text); }
+  .stat-label { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+  .phase {
+    margin-bottom: 1rem;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    cursor: pointer;
+    background: var(--bg2);
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .phase-header:hover { background: var(--bg3); }
+
+  .phase-title { font-size: 14px; font-weight: 500; }
+  .phase-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .phase-pct { font-size: 13px; font-weight: 500; }
+
+  .prog-bar {
+    height: 3px;
+    background: var(--border);
+    overflow: hidden;
+  }
+  .prog-fill {
+    height: 100%;
+    background: var(--green);
+    transition: width 0.3s ease;
+  }
+
+  .items { padding: 4px 16px 10px; }
+
+  .item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 0.5px solid var(--border);
+    gap: 10px;
+  }
+  .item:last-child { border-bottom: none; }
+
+  .item label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    flex: 1;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .item input[type=checkbox] {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    accent-color: var(--green);
+    flex-shrink: 0;
+  }
+
+  .item.done label { color: var(--text3); text-decoration: line-through; }
+
+  .tag {
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    font-weight: 500;
+  }
+  .tag-p0 { background: var(--red-bg); color: var(--red); }
+  .tag-p1 { background: var(--amber-bg); color: var(--amber); }
+  .tag-p2 { background: var(--bg2); color: var(--text2); }
+  .tag-done { background: var(--green-bg); color: var(--green); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="top-bar">
+  <span class="top-title">面试备战 · 12周计划</span>
+  <div class="btn-group">
+    <button class="export-btn" onclick="openExport()">导出进度</button>
+    <button class="import-btn" onclick="openImport()">导入进度</button>
+    <button class="reset-btn" onclick="resetAll()">重置</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="export-modal">
+  <div class="modal">
+    <div class="modal-title">导出进度</div>
+    <div class="modal-desc">复制下方文字，保存到记事本或微信收藏。换浏览器/换电脑时粘贴到「导入进度」即可恢复。</div>
+    <textarea id="export-text" readonly></textarea>
+    <div class="modal-actions">
+      <button onclick="copyExport()">复制</button>
+      <button onclick="closeModal('export-modal')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="import-modal">
+  <div class="modal">
+    <div class="modal-title">导入进度</div>
+    <div class="modal-desc">粘贴之前导出的文字，点击「确认导入」恢复进度。</div>
+    <textarea id="import-text" placeholder="粘贴导出的进度文字..."></textarea>
+    <div class="modal-actions">
+      <button onclick="closeModal('import-modal')">取消</button>
+      <button class="primary" onclick="doImport()">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<div class="summary">
+  <div class="stat"><div class="stat-num" id="s-done">0</div><div class="stat-label">已完成</div></div>
+  <div class="stat"><div class="stat-num" id="s-total">0</div><div class="stat-label">总条目</div></div>
+  <div class="stat"><div class="stat-num" id="s-pct">0%</div><div class="stat-label">完成率</div></div>
+  <div class="stat"><div class="stat-num" id="s-week">第1周</div><div class="stat-label">当前进度</div></div>
+</div>
+
+<div id="phases"></div>
+
+</div>
+<script>
+const DATA = [
+  {
+    id:'p1', title:'第一阶段：Java基础原理', weeks:'第1-3周',
+    items:[
+      {id:'jvm1', text:'JVM内存结构', tag:'p0', done:true},
+      {id:'jvm2', text:'类加载机制（双亲委派）', tag:'p0'},
+      {id:'jvm3', text:'GC算法（标记清除/复制/标记整理）', tag:'p0'},
+      {id:'jvm4', text:'GC器对比（G1 vs CMS）', tag:'p0'},
+      {id:'jvm5', text:'OOM排查（heap dump分析）', tag:'p1'},
+      {id:'jvm6', text:'JVM调优参数', tag:'p1'},
+      {id:'str1', text:'String内存模型', tag:'p0', done:true},
+      {id:'str2', text:'值传递原理', tag:'p0', done:true},
+      {id:'col1', text:'HashMap源码', tag:'p0'},
+      {id:'col2', text:'ConcurrentHashMap源码', tag:'p0'},
+      {id:'ser1', text:'序列化/SPI', tag:'p1', done:true},
+      {id:'ref1', text:'泛型、反射、动态代理', tag:'p1'},
+      {id:'con1', text:'synchronized底层原理', tag:'p0'},
+      {id:'con2', text:'volatile（可见性/禁止重排序）', tag:'p0'},
+      {id:'con3', text:'ThreadLocal（内存泄漏）', tag:'p0'},
+      {id:'con4', text:'线程池（核心参数/拒绝策略）', tag:'p0'},
+      {id:'con5', text:'CAS、AQS原理', tag:'p0'},
+      {id:'con6', text:'ReentrantLock、ReadWriteLock', tag:'p1'},
+    ]
+  },
+  {
+    id:'p2', title:'第二阶段：框架和中间件', weeks:'第4-6周',
+    items:[
+      {id:'sp1', text:'IOC容器启动流程', tag:'p0'},
+      {id:'sp2', text:'Bean生命周期', tag:'p0'},
+      {id:'sp3', text:'AOP原理（动态代理）', tag:'p0'},
+      {id:'sp4', text:'Spring事务（传播机制/失效场景）', tag:'p0'},
+      {id:'sp5', text:'Spring Boot自动装配原理', tag:'p1'},
+      {id:'db1', text:'索引原理（B+树）', tag:'p0'},
+      {id:'db2', text:'事务隔离级别（MVCC）', tag:'p0'},
+      {id:'db3', text:'锁（行锁/间隙锁/死锁）', tag:'p0'},
+      {id:'db4', text:'Explain执行计划分析', tag:'p0'},
+      {id:'db5', text:'慢查询优化', tag:'p0', done:true},
+      {id:'rd1', text:'Redis数据结构底层', tag:'p0'},
+      {id:'rd2', text:'持久化（RDB/AOF）', tag:'p1'},
+      {id:'rd3', text:'缓存穿透/击穿/雪崩', tag:'p0'},
+      {id:'rd4', text:'分布式锁', tag:'p0'},
+      {id:'rd5', text:'Redis集群模式', tag:'p1'},
+    ]
+  },
+  {
+    id:'p3', title:'第三阶段：系统设计和分布式', weeks:'第7-9周',
+    items:[
+      {id:'dis1', text:'分布式事务（Seata/2PC/TCC）', tag:'p0'},
+      {id:'dis2', text:'分布式锁方案对比', tag:'p0'},
+      {id:'mq1', text:'Kafka/RocketMQ核心原理', tag:'p1'},
+      {id:'mq2', text:'消息队列在金融场景的应用', tag:'p1'},
+      {id:'fin1', text:'幂等性设计（对账/支付）', tag:'p0'},
+      {id:'fin2', text:'限流熔断（Sentinel）', tag:'p1'},
+      {id:'rpc1', text:'微服务/RPC设计（Thrift实战）', tag:'p0', done:true},
+    ]
+  },
+  {
+    id:'p4', title:'第四阶段：项目准备和模拟面试', weeks:'第10-12周',
+    items:[
+      {id:'prj1', text:'对账系统设计故事（STAR法则）', tag:'p0'},
+      {id:'prj2', text:'SQL优化案例包装', tag:'p0', done:true},
+      {id:'prj3', text:'Thrift RPC实践故事', tag:'p0', done:true},
+      {id:'prj4', text:'OpenPDF安全问题上报故事', tag:'p1'},
+      {id:'code1', text:'手写单例（双重检查锁）', tag:'p0'},
+      {id:'code2', text:'手写线程池', tag:'p0'},
+      {id:'code3', text:'手写LRU缓存', tag:'p0'},
+      {id:'code4', text:'二叉树遍历', tag:'p1'},
+      {id:'code5', text:'快排、归并排序', tag:'p1'},
+      {id:'mock1', text:'模拟面试第1轮（Java基础）', tag:'p0'},
+      {id:'mock2', text:'模拟面试第2轮（系统设计）', tag:'p0'},
+      {id:'mock3', text:'模拟面试第3轮（项目经验）', tag:'p0'},
+    ]
+  }
+];
+
+const KEY = 'interview_tracker_v1';
+
+function load() {
+  try { const r = localStorage.getItem(KEY); return r ? JSON.parse(r) : null; }
+  catch(e) { return null; }
+}
+
+function save(s) {
+  try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e) {}
+}
+
+function getState() {
+  const saved = load();
+  const s = {};
+  DATA.forEach(p => p.items.forEach(i => {
+    s[i.id] = saved && saved[i.id] !== undefined ? saved[i.id] : (i.done || false);
+  }));
+  return s;
+}
+
+let state = getState();
+
+function tagInfo(tag, done) {
+  if (done) return { cls: 'tag-done', txt: '完成' };
+  if (tag === 'p0') return { cls: 'tag-p0', txt: '必须' };
+  if (tag === 'p1') return { cls: 'tag-p1', txt: '重要' };
+  return { cls: 'tag-p2', txt: '加分' };
+}
+
+function render() {
+  const container = document.getElementById('phases');
+  container.innerHTML = '';
+  let totalDone = 0, totalAll = 0;
+
+  DATA.forEach(phase => {
+    const doneCnt = phase.items.filter(i => state[i.id]).length;
+    const allCnt = phase.items.length;
+    totalDone += doneCnt;
+    totalAll += allCnt;
+    const pct = allCnt ? Math.round(doneCnt / allCnt * 100) : 0;
+    const pctColor = pct === 100 ? 'var(--green)' : pct > 0 ? 'var(--amber)' : 'var(--text3)';
+
+    const el = document.createElement('div');
+    el.className = 'phase';
+    el.innerHTML = `
+      <div class="phase-header" onclick="togglePhase('${phase.id}')">
+        <div>
+          <div class="phase-title">${phase.title}</div>
+          <div class="phase-meta">${phase.weeks} · ${doneCnt}/${allCnt} 完成</div>
+        </div>
+        <span class="phase-pct" style="color:${pctColor}">${pct}%</span>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="bar-${phase.id}" style="width:${pct}%"></div></div>
+      <div class="items" id="items-${phase.id}">
+        ${phase.items.map(item => {
+          const done = state[item.id];
+          const t = tagInfo(item.tag, done);
+          return `<div class="item${done ? ' done' : ''}" id="row-${item.id}">
+            <label>
+              <input type="checkbox" ${done ? 'checked' : ''} onchange="toggle('${item.id}','${phase.id}',this.checked)">
+              ${item.text}
+            </label>
+            <span class="tag ${t.cls}">${t.txt}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    `;
+    container.appendChild(el);
+  });
+
+  const pct = totalAll ? Math.round(totalDone / totalAll * 100) : 0;
+  document.getElementById('s-done').textContent = totalDone;
+  document.getElementById('s-total').textContent = totalAll;
+  document.getElementById('s-pct').textContent = pct + '%';
+  const wk = Math.min(12, Math.max(1, Math.ceil(totalDone / (totalAll / 12))));
+  document.getElementById('s-week').textContent = '第' + wk + '周';
+}
+
+function toggle(itemId, phaseId, checked) {
+  state[itemId] = checked;
+  save(state);
+  const row = document.getElementById('row-' + itemId);
+  if (row) {
+    row.className = 'item' + (checked ? ' done' : '');
+    const tag = row.querySelector('.tag');
+    const phase = DATA.find(p => p.id === phaseId);
+    const item = phase && phase.items.find(i => i.id === itemId);
+    if (tag && item) {
+      const t = tagInfo(item.tag, checked);
+      tag.className = 'tag ' + t.cls;
+      tag.textContent = t.txt;
+    }
+  }
+  const phase = DATA.find(p => p.id === phaseId);
+  if (phase) {
+    const doneCnt = phase.items.filter(i => state[i.id]).length;
+    const pct = Math.round(doneCnt / phase.items.length * 100);
+    const bar = document.getElementById('bar-' + phaseId);
+    if (bar) bar.style.width = pct + '%';
+    const header = document.querySelector(`#items-${phaseId}`)?.previousElementSibling?.previousElementSibling;
+  }
+  updateSummary();
+}
+
+function updateSummary() {
+  let td = 0, ta = 0;
+  DATA.forEach(p => p.items.forEach(i => { ta++; if (state[i.id]) td++; }));
+  const pct = ta ? Math.round(td / ta * 100) : 0;
+  document.getElementById('s-done').textContent = td;
+  document.getElementById('s-pct').textContent = pct + '%';
+  const wk = Math.min(12, Math.max(1, Math.ceil(td / (ta / 12))));
+  document.getElementById('s-week').textContent = '第' + wk + '周';
+}
+
+function togglePhase(phaseId) {
+  const el = document.getElementById('items-' + phaseId);
+  if (el) el.style.display = el.style.display === 'none' ? '' : 'none';
+}
+
+function resetAll() {
+  if (!confirm('确定重置所有进度？')) return;
+  DATA.forEach(p => p.items.forEach(i => { state[i.id] = false; }));
+  save(state);
+  render();
+}
+
+function openExport() {
+  const txt = document.getElementById('export-text');
+  txt.value = JSON.stringify(state);
+  document.getElementById('export-modal').classList.add('open');
+}
+
+function copyExport() {
+  const txt = document.getElementById('export-text');
+  txt.select();
+  document.execCommand('copy');
+  alert('已复制！请保存到记事本或微信收藏。');
+}
+
+function openImport() {
+  document.getElementById('import-text').value = '';
+  document.getElementById('import-modal').classList.add('open');
+}
+
+function doImport() {
+  const raw = document.getElementById('import-text').value.trim();
+  if (!raw) { alert('请先粘贴导出的文字'); return; }
+  try {
+    const parsed = JSON.parse(raw);
+    state = getState();
+    Object.keys(parsed).forEach(k => { if (state.hasOwnProperty(k)) state[k] = parsed[k]; });
+    save(state);
+    render();
+    closeModal('import-modal');
+    alert('导入成功！');
+  } catch(e) {
+    alert('格式不对，请粘贴完整的导出文字');
+  }
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+  ['export-modal','import-modal'].forEach(id => {
+    const el = document.getElementById(id);
+    if (e.target === el) el.classList.remove('open');
+  });
+});
+
+render();
+</script>
+</body>
+</html>
