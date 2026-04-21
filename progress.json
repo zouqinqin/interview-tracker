@@ -4,7 +4,7 @@
   "jvm3": true,
   "jvm4": true,
   "jvm5": true,
-  "jvm6": true,
+  "jvm6": false,
   "str1": true,
   "str2": true,
   "col1": false,
