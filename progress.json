@@ -11,7 +11,7 @@
   "col2": true,
   "ser1": true,
   "ref1": false,
-  "con1": false,
+  "con1": true,
   "con2": false,
   "con3": false,
   "con4": false,
